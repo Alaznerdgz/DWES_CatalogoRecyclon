@@ -3,6 +3,9 @@ package org.zabalburu.dao;
 import java.util.List;
 import org.zabalburu.modelo.Producto;
 
+import jakarta.persistence.EntityManager;
+
+
 public interface ProductoDAO {
     Producto nuevoProducto(Producto nuevo);
     Producto modificarProducto(Producto modificar);
@@ -11,4 +14,5 @@ public interface ProductoDAO {
     List<Producto> getProductos();
     List<Producto> getProductosPorCategoria(Integer idCategoria);
     List<Producto> getProductosStockBajo(Integer limite);
+    EntityManager getEntityManager();
 }

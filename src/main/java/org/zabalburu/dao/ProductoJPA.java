@@ -14,7 +14,7 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class ProductoJPA implements ProductoDAO {
 
-    @PersistenceContext(unitName = "recyclonPU")
+    @PersistenceContext(unitName = "PU")
     private EntityManager em;
 
     @Override
@@ -83,4 +83,10 @@ public class ProductoJPA implements ProductoDAO {
         q.setParameter("limite", limite);
         return q.getResultList();
     }
+
+	@Override
+	public EntityManager getEntityManager() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

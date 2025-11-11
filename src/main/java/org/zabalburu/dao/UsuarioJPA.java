@@ -15,7 +15,7 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class UsuarioJPA implements UsuarioDAO {
 
-    @PersistenceContext(unitName = "recyclonPU")
+    @PersistenceContext(unitName = "PU")
     private EntityManager em;
 
     @Override
@@ -74,4 +74,10 @@ public class UsuarioJPA implements UsuarioDAO {
         );
         return q.getResultList();
     }
+
+	@Override
+	public EntityManager getEntityManager() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
