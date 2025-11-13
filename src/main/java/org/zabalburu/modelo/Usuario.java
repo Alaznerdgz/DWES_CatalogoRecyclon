@@ -15,7 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "Usuario")
 public class Usuario implements Serializable {
     
     private static final long serialVersionUID = 1L;
