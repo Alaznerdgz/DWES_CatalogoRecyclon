@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.zabalburu</groupId>
-    <artifactId>Nuevo</artifactId>
+    <artifactId>CatalogoRecyclonAA</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -54,7 +54,7 @@
 	</dependencies>
 
     <build>
-        <finalName>Nuevo</finalName>
+        <finalName>CatalogoRecyclonAA</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

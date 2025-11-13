@@ -1,12 +1,9 @@
 package org.zabalburu.controlador;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.zabalburu.cdi.MensajeCDI;
 import org.zabalburu.modelo.LineaPedido;
@@ -34,7 +31,7 @@ public class ControladorRecyclon extends HttpServlet {
     private MensajeCDI mensajeCDI;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         
         String accion = request.getParameter("accion");
         String pagina = "login.jsp";
@@ -58,7 +55,7 @@ public class ControladorRecyclon extends HttpServlet {
                 case "vercarrito":
                     pagina = verCarrito(request, response);
                     break;
-                case "eliminardel carrito":
+                case "eliminardelcarrito":
                     pagina = eliminarDelCarrito(request, response);
                     break;
                 case "finalizarpedido":
@@ -141,7 +138,6 @@ public class ControladorRecyclon extends HttpServlet {
         return "catalogo.jsp";
     }
 
-    @SuppressWarnings("unchecked")
     private String agregarAlCarrito(HttpServletRequest request, HttpServletResponse response) {
         HttpSession sesion = request.getSession();
         Integer idProducto = Integer.parseInt(request.getParameter("id"));
@@ -149,22 +145,30 @@ public class ControladorRecyclon extends HttpServlet {
         
         Producto producto = service.getProducto(idProducto);
         
-        Map<Integer, LineaPedido> carrito = (Map<Integer, LineaPedido>) sesion.getAttribute("carrito");
+        List<LineaPedido> carrito = (List<LineaPedido>) sesion.getAttribute("carrito");
         if (carrito == null) {
-            carrito = new HashMap<>();
+            carrito = new ArrayList<>();
         }
         
-        if (carrito.containsKey(idProducto)) {
-            LineaPedido linea = carrito.get(idProducto);
-            linea.setCantidad(linea.getCantidad() + cantidad);
-            linea.setSubtotal(linea.getPrecioUnitario().multiply(new BigDecimal(linea.getCantidad())));
+        // Buscar si el producto ya existe en el carrito
+        LineaPedido lineaExistente = null;
+        for (LineaPedido linea : carrito) {
+            if (linea.getProducto().getId().equals(idProducto)) {
+                lineaExistente = linea;
+                break;
+            }
+        }
+        
+        if (lineaExistente != null) {
+            lineaExistente.setCantidad(lineaExistente.getCantidad() + cantidad);
+            lineaExistente.setSubtotal(lineaExistente.getPrecioUnitario() * lineaExistente.getCantidad());
         } else {
             LineaPedido linea = new LineaPedido();
             linea.setProducto(producto);
             linea.setCantidad(cantidad);
             linea.setPrecioUnitario(producto.getPrecio());
-            linea.setSubtotal(producto.getPrecio().multiply(new BigDecimal(cantidad)));
-            carrito.put(idProducto, linea);
+            linea.setSubtotal(producto.getPrecio() * cantidad);
+            carrito.add(linea);
         }
         
         sesion.setAttribute("carrito", carrito);
@@ -174,31 +178,39 @@ public class ControladorRecyclon extends HttpServlet {
         return mostrarCatalogo(request, response);
     }
 
-    @SuppressWarnings("unchecked")
     private String verCarrito(HttpServletRequest request, HttpServletResponse response) {
         HttpSession sesion = request.getSession();
-        Map<Integer, LineaPedido> carrito = (Map<Integer, LineaPedido>) sesion.getAttribute("carrito");
+        List<LineaPedido> carrito = (List<LineaPedido>) sesion.getAttribute("carrito");
         
         if (carrito != null && !carrito.isEmpty()) {
-            BigDecimal total = BigDecimal.ZERO;
-            for (LineaPedido linea : carrito.values()) {
-                total = total.add(linea.getSubtotal());
+            Integer total = 0;
+            for (LineaPedido linea : carrito) {
+                total += linea.getSubtotal();
             }
             request.setAttribute("total", total);
-            request.setAttribute("lineas", carrito.values());
+            request.setAttribute("lineas", carrito);
         }
         
         return "carrito.jsp";
     }
 
-    @SuppressWarnings("unchecked")
     private String eliminarDelCarrito(HttpServletRequest request, HttpServletResponse response) {
         HttpSession sesion = request.getSession();
         Integer idProducto = Integer.parseInt(request.getParameter("id"));
         
-        Map<Integer, LineaPedido> carrito = (Map<Integer, LineaPedido>) sesion.getAttribute("carrito");
+        List<LineaPedido> carrito = (List<LineaPedido>) sesion.getAttribute("carrito");
         if (carrito != null) {
-            carrito.remove(idProducto);
+            // Buscar y eliminar el producto del carrito
+            LineaPedido lineaAEliminar = null;
+            for (LineaPedido linea : carrito) {
+                if (linea.getProducto().getId().equals(idProducto)) {
+                    lineaAEliminar = linea;
+                    break;
+                }
+            }
+            if (lineaAEliminar != null) {
+                carrito.remove(lineaAEliminar);
+            }
         }
         
         mensajeCDI.setTipo("info");
@@ -207,11 +219,10 @@ public class ControladorRecyclon extends HttpServlet {
         return verCarrito(request, response);
     }
 
-    @SuppressWarnings("unchecked")
     private String finalizarPedido(HttpServletRequest request, HttpServletResponse response) {
         HttpSession sesion = request.getSession();
         Usuario usuario = (Usuario) sesion.getAttribute("usuario");
-        Map<Integer, LineaPedido> carrito = (Map<Integer, LineaPedido>) sesion.getAttribute("carrito");
+        List<LineaPedido> carrito = (List<LineaPedido>) sesion.getAttribute("carrito");
         
         if (carrito == null || carrito.isEmpty()) {
             mensajeCDI.setTipo("warning");
@@ -224,10 +235,10 @@ public class ControladorRecyclon extends HttpServlet {
         pedido.setFechaPedido(new Date());
         pedido.setEstado("PENDIENTE");
         
-        BigDecimal total = BigDecimal.ZERO;
+        Integer total = 0;
         List<LineaPedido> lineas = new ArrayList<>();
         
-        for (LineaPedido lineaCarrito : carrito.values()) {
+        for (LineaPedido lineaCarrito : carrito) {
             LineaPedido linea = new LineaPedido();
             linea.setPedido(pedido);
             linea.setProducto(lineaCarrito.getProducto());
@@ -235,7 +246,7 @@ public class ControladorRecyclon extends HttpServlet {
             linea.setPrecioUnitario(lineaCarrito.getPrecioUnitario());
             linea.setSubtotal(lineaCarrito.getSubtotal());
             lineas.add(linea);
-            total = total.add(linea.getSubtotal());
+            total += linea.getSubtotal();
         }
         
         pedido.setTotal(total);
@@ -289,7 +300,7 @@ public class ControladorRecyclon extends HttpServlet {
         
         producto.setNombre(request.getParameter("nombre"));
         producto.setDescripcion(request.getParameter("descripcion"));
-        producto.setPrecio(new BigDecimal(request.getParameter("precio")));
+        producto.setPrecio(Integer.parseInt(request.getParameter("precio")));
         producto.setStock(Integer.parseInt(request.getParameter("stock")));
         producto.setImagen(request.getParameter("imagen"));
         

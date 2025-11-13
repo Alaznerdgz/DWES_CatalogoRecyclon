@@ -43,13 +43,15 @@
                                 Iniciar Sesión
                             </button>
                         </form>
-                        
+                        <!--//Quitar esta parte para entregar
+                        --------------------------------------------->
                         <hr class="my-4">
                         <div class="text-center small text-muted">
                             <p><strong>Usuarios de prueba:</strong></p>
                             <p>Admin: <code>admin / admin123</code></p>
                             <p>Cliente: <code>cliente1 / cliente123</code></p>
                         </div>
+                        <!---------------------------------------------->
                     </div>
                 </div>
             </div>

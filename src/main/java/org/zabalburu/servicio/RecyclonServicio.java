@@ -118,11 +118,8 @@ public class RecyclonServicio {
         return pedidoDAO.getPedidos();
     }
     
-    public List<Pedido> getPedidosPorUsuario(Integer idUsuario) {
-        return pedidoDAO.getPedidosPorUsuario(idUsuario);
+    public List<Pedido> getPedidosPorUsuario(Integer usuario) {
+        return pedidoDAO.getPedidosPorUsuario(usuario);
     }
     
-    public List<Pedido> getPedidosPorFecha(Date fechaInicio, Date fechaFin) {
-        return pedidoDAO.getPedidosPorFecha(fechaInicio, fechaFin);
-    }
 }

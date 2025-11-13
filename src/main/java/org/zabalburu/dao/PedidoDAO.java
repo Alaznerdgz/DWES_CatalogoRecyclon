@@ -12,7 +12,6 @@ public interface PedidoDAO {
     void eliminarPedido(Integer id);
     Pedido getPedido(Integer id);
     List<Pedido> getPedidos();
-    List<Pedido> getPedidosPorUsuario(Integer idUsuario);
-    List<Pedido> getPedidosPorFecha(Date fechaInicio, Date fechaFin);
+    List<Pedido> getPedidosPorUsuario(Integer usuario);
     EntityManager getEntityManager();
 }

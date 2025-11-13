@@ -2,6 +2,7 @@ package org.zabalburu.modelo;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,40 +16,36 @@ import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "usuarios")
-@Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Usuario implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Integer id;
     
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(name = "username")
     private String username;
     
-    @Column(nullable = false)
+    @Column(name = "password")
     private String password;
     
-    @Column(nullable = false, length = 100)
+    @Column(name = "nombre")
     private String nombre;
     
-    @Column(length = 100)
+    @Column(name = "apellidos")
     private String apellidos;
     
-    @Column(length = 200)
+    @Column(name = "email")
     private String email;
     
-    @Column(length = 20)
+    @Column(name = "telefono")
     private String telefono;
     
-    @Column(length = 250)
+    @Column(name = "direccion")
     private String direccion;
     
-    // ROL: ADMIN o CLIENTE
-    @Column(nullable = false, length = 20)
+    @Column(name = "rol")
     private String rol;
     
     @OneToMany(mappedBy = "usuario")
@@ -59,4 +56,108 @@ public class Usuario implements Serializable {
         return "Usuario [id=" + id + ", username=" + username + ", nombre=" + nombre + 
                ", apellidos=" + apellidos + ", rol=" + rol + "]";
     }
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Usuario other = (Usuario) obj;
+		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getApellidos() {
+		return apellidos;
+	}
+
+	public void setApellidos(String apellidos) {
+		this.apellidos = apellidos;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+    
+    
+    
 }

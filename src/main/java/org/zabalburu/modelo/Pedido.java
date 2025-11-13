@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -22,29 +23,26 @@ import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "pedidos")
-@Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Pedido implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Integer id;
     
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(name = "fechaPedido")
     private Date fechaPedido;
     
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal total;
+    @Column(name = "total")
+    private Integer total;
     
-    @Column(length = 50)
+    @Column(name = "estado")
     private String estado; // PENDIENTE, PROCESANDO, ENVIADO, ENTREGADO
     
     @ManyToOne
-    @JoinColumn(name = "id_usuario", nullable = false)
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
     
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
@@ -55,4 +53,75 @@ public class Pedido implements Serializable {
         return "Pedido [id=" + id + ", fechaPedido=" + fechaPedido + ", total=" + total + 
                ", estado=" + estado + "]";
     }
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Pedido other = (Pedido) obj;
+		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Date getFechaPedido() {
+		return fechaPedido;
+	}
+
+	public void setFechaPedido(Date fechaPedido) {
+		this.fechaPedido = fechaPedido;
+	}
+
+	public Integer getTotal() {
+		return total;
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+	public List<LineaPedido> getLineas() {
+		return lineas;
+	}
+
+	public void setLineas(List<LineaPedido> lineas) {
+		this.lineas = lineas;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+    
+    
 }

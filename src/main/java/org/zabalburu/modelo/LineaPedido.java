@@ -2,6 +2,7 @@ package org.zabalburu.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,37 +17,105 @@ import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "lineas_pedido")
-@Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class LineaPedido implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Integer id;
     
     @ManyToOne
-    @JoinColumn(name = "id_pedido", nullable = false)
+    @JoinColumn(name = "id_pedido")
     private Pedido pedido;
     
     @ManyToOne
-    @JoinColumn(name = "id_producto", nullable = false)
+    @JoinColumn(name = "id_producto")
     private Producto producto;
     
-    @Column(nullable = false)
+    @Column(name = "cantidad")
     private Integer cantidad;
     
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal precioUnitario;
+    @Column(name = "precioUnitario")
+    private Integer precioUnitario;
     
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal subtotal;
+    @Column(name = "subtotal")
+    private Integer subtotal;
 
     @Override
     public String toString() {
         return "LineaPedido [id=" + id + ", cantidad=" + cantidad + ", precioUnitario=" + 
                precioUnitario + ", subtotal=" + subtotal + "]";
     }
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LineaPedido other = (LineaPedido) obj;
+		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Pedido getPedido() {
+		return pedido;
+	}
+
+	public void setPedido(Pedido pedido) {
+		this.pedido = pedido;
+	}
+
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
+
+	public Integer getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(Integer cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public Integer getPrecioUnitario() {
+		return precioUnitario;
+	}
+
+	public void setPrecioUnitario(Integer precioUnitario) {
+		this.precioUnitario = precioUnitario;
+	}
+
+	public Integer getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(Integer subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+    
+    
 }
