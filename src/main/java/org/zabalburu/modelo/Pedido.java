@@ -43,7 +43,7 @@ public class Pedido implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "id_usuario")
-    private Usuario id_usuario;
+    private Usuario usuario;
     
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<LineaPedido> lineas;
@@ -104,11 +104,11 @@ public class Pedido implements Serializable {
 	}
 
 	public Usuario getUsuario() {
-		return id_usuario;
+		return usuario;
 	}
 
 	public void setUsuario(Usuario usuario) {
-		this.id_usuario = usuario;
+		this.usuario = usuario;
 	}
 
 	public List<LineaPedido> getLineas() {

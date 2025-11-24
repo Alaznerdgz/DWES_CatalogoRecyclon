@@ -62,12 +62,12 @@ public class PedidoJPA implements PedidoDAO {
 	            """
 	            SELECT p
 	            FROM Pedido p
-	            Where p.id_usuario = :usuario
+	            Where p.usuario.id = :usuario
 	            ORDER BY p.fechaPedido
 	            """,
 	            Pedido.class
 	        );
-		p.setParameter("id_usuario", usuario);
+		p.setParameter("usuario", usuario);
 		return p.getResultList();
 	}
 
